@@ -18,9 +18,15 @@ let
 in
 
 mkShell {
-  buildInputs = with pkgs; [
+  buildInputs = with pkgs; let
+      exe = haskell.lib.justStaticExecutables;
+  in [
     easy-hls
     cabal-install
     ghc
+    (exe haskellPackages.hoogle)
+    python3
+    stylish-haskell
+#    stylish-cabal            
   ];
 }
