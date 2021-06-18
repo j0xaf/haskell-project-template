@@ -1,0 +1,14 @@
+#+TITLE: Haskell Project Template
+
+* Nix
+
+This setup uses nix to make haskell development tools available, most notably
+[[https://github.com/haskell/haskell-language-server][haskell-language-server]] via [[https://github.com/jkachmar/easy-hls-nix][github:jkachmar/easy-hls-nix]].
+
+** Select GHC Version
+   Set ~ghcVersion~ in [[./shell.nix][~shell.nix~]] accordingly.
+
+* Howto
+  - clone this repository
+  - enter ~nix-shell~
+  - run ~cabal init~
