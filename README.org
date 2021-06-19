@@ -1,14 +1,56 @@
 #+TITLE: Haskell Project Template
 
-* Nix
+This haskell project template contains a basic haskell setup using nix [[https://nixos.wiki/wiki/Flakes][flakes]]
+and IOHK's [[https://github.com/input-output-hk/haskell.nix][haskell.nix]].
 
-This setup uses nix to make haskell development tools available, most notably
-[[https://github.com/haskell/haskell-language-server][haskell-language-server]] via [[https://github.com/jkachmar/easy-hls-nix][github:jkachmar/easy-hls-nix]].
+* Preconditions
 
-** Select GHC Version
-   Set ~ghcVersion~ in [[./shell.nix][~shell.nix~]] accordingly.
+** Flakes enabled
 
-* Howto
-  - clone this repository
-  - enter ~nix-shell~
-  - run ~cabal init~
+   Nix Flakes are still experimental. To use them, you'll have to enable them in
+   your ~/etc/nixos/configuration.nix~:
+
+   #+begin_src nix
+     nix = {
+       package = pkgs.nixFlakes;
+       extraOptions = ''
+         experimental-features = nix-command flakes
+       '';
+     };
+   #+end_src
+
+** Use IOHK binary cache
+
+   To avoid compiling GHC, add IOHK's binary cache to
+   ~/etc/nixos/configuration.nix~:
+
+   #+begin_src nix
+      nix = {
+        binaryCachePublicKeys = [
+          "hydra.iohk.io:f/Ea+s+dFdN+3Y/G+FDgSq+a5NEWhJGzdjvKNGv0/EQ="
+        ];
+        binaryCaches = [
+          "https://hydra.iohk.io"
+        ];
+      };
+   #+end_src
+
+* Usage
+
+  1. Create new repository from template
+
+     #+begin_src shell
+     $ gh repo create $myrepo --template j0xaf/haskell-project-template
+     #+end_src
+
+  2. Initialize using ~cabal~
+
+     #+begin_src shell
+     $ nix-shell --run 'cabal init' -p cabal-install ghc
+     #+end_src
+
+  3. Enter the shell
+
+     #+begin_src shell
+     $ nix develop
+     #+end_src
