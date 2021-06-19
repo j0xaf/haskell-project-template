@@ -54,3 +54,18 @@ and IOHK's [[https://github.com/input-output-hk/haskell.nix][haskell.nix]].
      #+begin_src shell
      $ nix develop
      #+end_src
+
+* Troubleshooting
+
+** Garbage collection
+  
+   To prevent garbage collection while using ~nix develop~ there is
+   unfortunately not yet the perfect solution. In particular
+   [[https://github.com/nix-community/lorri]] does not yet support nix flakes.
+
+   [[https://github.com/NixOS/nix/issues/4250][NixOS/nix#4250]] suggests using /profiles/ to manage gc roots:
+
+   #+begin_src shell
+     $ nix develop --profile ./foo # create profile
+     $ nix develop ./foo # re-enter previously created profile
+   #+end_src
