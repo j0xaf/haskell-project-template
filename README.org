@@ -66,6 +66,6 @@ and IOHK's [[https://github.com/input-output-hk/haskell.nix][haskell.nix]].
    [[https://github.com/NixOS/nix/issues/4250][NixOS/nix#4250]] suggests using /profiles/ to manage gc roots:
 
    #+begin_src shell
-     $ nix develop --profile ./foo # create profile
-     $ nix develop ./foo # re-enter previously created profile
+     $ nix develop --profile .nixprofile/foo # create profile
+     $ nix develop .nixprofile/foo # re-enter previously created profile
    #+end_src
