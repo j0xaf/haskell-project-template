@@ -43,16 +43,18 @@ and IOHK's [[https://github.com/input-output-hk/haskell.nix][haskell.nix]].
   1. Create new repository from template
 
      #+begin_src shell
-     $ gh repo create $myrepo --template j0xaf/haskell-project-template
+       $ export REPO="somerepo" 
+       $ git init "${REPO}" && cd "${REPO}" \
+           && git commit --allow-empty -m "initial" \
+           && git pull --allow-unrelated-histories --squash git@github.com:j0xaf/haskell-project-template.git \
+           && rm README.md \
+           && nix-shell --run 'nix --experimental-features "nix-command flakes" flake lock' -p nixFlakes \
+           && nix-shell --run "cabal init --minimal --non-interactive --package-name=${REPO}" -p cabal-install ghc \
+           && git add -A \
+           && git commit --amend --no-edit
      #+end_src
 
-  2. Initialize using ~cabal~
-
-     #+begin_src shell
-     $ nix-shell --run 'cabal init' -p cabal-install ghc
-     #+end_src
-
-  3. (optional) If using ~lorri~ and ~direnv~:
+  2. (optional) If using ~lorri~ and ~direnv~:
     
      #+begin_src shell
        $ lorri init
