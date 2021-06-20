@@ -5,7 +5,10 @@ and IOHK's [[https://github.com/input-output-hk/haskell.nix][haskell.nix]].
 
 * Preconditions
 
-** Flakes enabled
+** For using nix flakes:
+
+   Optional: you can skip this step in case you simply want to use ~nix-shell~
+   without flakes, see troubleshooting section.
 
    Nix Flakes are still experimental. To use them, you'll have to enable them in
    your ~/etc/nixos/configuration.nix~:
@@ -49,21 +52,67 @@ and IOHK's [[https://github.com/input-output-hk/haskell.nix][haskell.nix]].
      $ nix-shell --run 'cabal init' -p cabal-install ghc
      #+end_src
 
-  3. Enter the shell
-
+  3. (optional) If using ~lorri~ and ~direnv~:
+    
      #+begin_src shell
-     $ nix develop
+       $ lorri init
+       $ direnv allow
      #+end_src
+
+  3a. If using ~nix flakes~: Enter the shell
+
+      #+begin_src shell
+      $ nix develop
+      #+end_src
+
+      If you are not using ~lorri~, please look into troubleshooting section for
+      how to retail garbage collection root. If you are using ~lorri~, the
+      provided ~shell.nix~ will be monitored by ~lorri~ and it will also
+      maintain a gc root for you.
+
+  3b. If using ~nix-shell~: Enter the shell
+  
+      #+begin_src shell
+      $ nix-shell
+      #+end_src
+
+      If using ~lorri~ a gc root will be maintained for you.
 
 * Troubleshooting
 
-** Garbage collection
+** Error "git tree is dirty"
+
+   If you see an error like "git tree is dirty" when entering ~nix develop~ (or
+   ~nix-shell~), like
+
+   #+begin_quote
+   warning: Git tree '/home/j0xaf/git/github.com/j0xaf/haskell-lsp-example' is dirty
+   #+end_quote
+
+   then you need to add your ~.cabal~ file to the git index (~git add
+   <projectname>.cabal~ should be sufficient).
+
+** Using lorri
+
+   Unfortunately, [[https://github.com/nix-community/lorri][github:nix-community/lorri]] does not yet support nix flakes.
+   For details see [[https://github.com/target/lorri/issues/460][github:target/lorri#460]]. Thankfully, there is a workaround using
+   [[https://github.com/edolstra/flake-compat][github:edolstra/flake-compat]].
+   
+   A ~shell.nix~ is provided for this compatibility shim. This makes it also
+   possible to use lorri, which keeps garbage collection roots for your projects. 
+
+   To use lorri:
+
+   1. install according to [[https://github.com/nix-community/lorri][github:nix-community/lorri]]
+
+   2. in the project 
+
+** Garbage collection without lorri
   
    To prevent garbage collection while using ~nix develop~ there is
-   unfortunately not yet the perfect solution. In particular
-   [[https://github.com/nix-community/lorri]] does not yet support nix flakes.
+   unfortunately not yet the perfect solution. 
 
-   [[https://github.com/NixOS/nix/issues/4250][NixOS/nix#4250]] suggests using /profiles/ to manage gc roots:
+   [[https://github.com/NixOS/nix/issues/4250][github:NixOS/nix#4250]] suggests using /profiles/ to manage gc roots:
 
    #+begin_src shell
      $ nix develop --profile .nixprofile/foo # create profile
