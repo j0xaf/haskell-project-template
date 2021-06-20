@@ -47,7 +47,7 @@ and IOHK's [[https://github.com/input-output-hk/haskell.nix][haskell.nix]].
        $ git init "${REPO}" && cd "${REPO}" \
            && git commit --allow-empty -m "initial" \
            && git pull --allow-unrelated-histories --squash git@github.com:j0xaf/haskell-project-template.git \
-           && rm README.md \
+           && rm README.org \
            && nix-shell --run 'nix --experimental-features "nix-command flakes" flake lock' -p nixFlakes \
            && nix-shell --run "cabal init --minimal --non-interactive --package-name=${REPO}" -p cabal-install ghc \
            && git add -A \
